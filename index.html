@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JARVIS Voice Command</title>
+  <style>
+    body {
+      background-color: #0c0f1d;
+      color: #00ffe7;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      text-shadow: 0 0 10px #00ffe7;
+    }
+
+    #status {
+      margin-top: 30px;
+      padding: 20px;
+      border: 1px solid #00ffe7;
+      background-color: rgba(0, 255, 231, 0.1);
+      box-shadow: 0 0 20px #00ffe7;
+      width: 80%;
+      max-width: 500px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #00ffe7;
+      color: #0c0f1d;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>J.A.R.V.I.S. Voice Interface</h1>
+  <div id="status">Click the button and speak a command.</div>
+  <button onclick="startListening()">Activate Microphone</button>
+
+  <script>
+    const status = document.getElementById('status');
+
+    function startListening() {
+      if (!('webkitSpeechRecognition' in window)) {
+        status.textContent = "Speech recognition not supported in this browser.";
+        return;
+      }
+
+      const recognition = new webkitSpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onstart = () => {
+        status.textContent = "Listening... Say something.";
+      };
+
+      recognition.onerror = (event) => {
+        status.textContent = "Error occurred: " + event.error;
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript.toLowerCase();
+        status.textContent = `You said: "${transcript}"`;
+
+        if (transcript.includes("jarvis, scan this man's balls")) {
+          setTimeout(() => {
+            status.textContent = "Okay. Initiating ball scan protocol... ✅";
+          }, 1000);
+        }
+      };
+
+      recognition.start();
+    }
+  </script>
+</body>
+</html>
